@@ -54,7 +54,7 @@ jobs:
     - name: docker build push
       working-directory: ./apis/userprofile
       run: |
-        docker build . -t openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
+        docker build -t openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }} .
         docker push openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
 
   cd_to_webapp:
