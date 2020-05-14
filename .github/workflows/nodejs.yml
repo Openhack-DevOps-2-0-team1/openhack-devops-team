@@ -11,7 +11,9 @@ on:
       - '.github/workflows/nodejs.yml'   
   pull_request:
     branches: [ master ]
-    paths: 'apis/userprofile/**'
+    paths: 
+      - 'apis/userprofile/**' 
+      - '.github/workflows/nodejs.yml' 
 
 jobs:
   build:
@@ -77,6 +79,6 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'openhack2b446dk2userprofile-staging'
+        app-name: 'openhack2b446dk2userprofile/slots/staging'
         images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
     
