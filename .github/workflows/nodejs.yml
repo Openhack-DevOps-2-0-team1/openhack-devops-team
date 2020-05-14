@@ -63,7 +63,7 @@ jobs:
     steps:
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'openhack2b446dk2userprofile/staging'
+        app-name: 'openhack2b446dk2userprofile-staging'
         images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
-        publish-profile: ${{ secrets.azureWebAppPublishProfile-userprofile-staging }}
+        publish-profile: ${{ secrets.azureWebAppPublishProfile_userprofile_staging }}
     
