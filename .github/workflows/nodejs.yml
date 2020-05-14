@@ -89,13 +89,13 @@ jobs:
         images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
     - name: Check the health and Swap
       run: |
-        sleep 60
-        result=$(curl -i https://openhack2b446dk2userprofile-staging.azurewebsites.net/api/healthcheck/user 2>/dev/null | grep HTTP/1.1)
+        sleep 10
+        result=$(curl -sb -H "Accept: application/json" https://openhack2b446dk2userprofile-staging.azurewebsites.net/api/healthcheck/user | grep '"status":"healthy"')
         echo $result
         if [[ -z $result ]]; then
-          echo "Staging deployent is not healthy!"
+          echo "Staging deployent is not healthy"
           exit 1
-        else:
+        else
           echo "Staging deployment looks healthy and doing swap"
           az webapp deployment slot swap --name openhack2b446dk2userprofile --resource-group openhack2b446dk2rg --slot staging
         fi
