@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ cd_userprofile ]
     paths: 
       - 'apis/userprofile/**' 
       - '.github/workflows/nodejs.yml'   
@@ -77,9 +77,26 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    #- name: get previous docker image
+    #  working-directory: ./apis/userprofile
+    #  run: |
+    #    docker_privious_image=$(az webapp config container show --name openhack2b446dk2userprofile --slot staging  -g openhack2b446dk2rg --query "[?name=='DOCKER_CUSTOM_IMAGE_NAME'].value" -o tsv | cut -d'|' -f 2)
+    #    echo "::set-env name=docker_privious_image::$docker_privious_image"
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhack2b446dk2userprofile'
         slot-name: 'staging'
         images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
-    
+    - name: Check the health and Swap
+      run: |
+        sleep 60
+        result=$(curl -i https://openhack2b446dk2userprofile-staging.azurewebsites.net/api/healthcheck/user 2>/dev/null | grep HTTP/1.1)
+        echo $result
+        if [[ -z $result ]]; then
+          echo "Staging deployent is not healthy!"
+          exit 1
+        else:
+          echo "Staging deployment looks healthy and doing swap"
+          az webapp deployment slot swap --name openhack2b446dk2userprofile --resource-group openhack2b446dk2rg --slot staging
+        fi
+      
