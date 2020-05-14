@@ -45,6 +45,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
       with:
         login-server: openhack2b446dk2acr.azurecr.io
@@ -54,7 +55,7 @@ jobs:
     - name: test docker version
       working-directory: ./apis/userprofile
       run: |
-        ls -l
+        ls
         pwd
         docker version
     
@@ -69,6 +70,7 @@ jobs:
     needs: [docker_build_and_push]
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhack2b446dk2userprofile-staging'
