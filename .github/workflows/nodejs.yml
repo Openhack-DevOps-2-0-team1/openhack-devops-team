@@ -10,6 +10,7 @@ on:
       - 'apis/userprofile/**' 
       - '.github/workflows/nodejs.yml'   
   pull_request:
+    branches: [ master ]
     paths: 'apis/userprofile/**'
 
 jobs:
@@ -39,7 +40,7 @@ jobs:
       run: npm test
       working-directory: ./apis/userprofile
 
-  docker build and push:
+  docker_build_and_push:
     if: github.event_name == 'push'
     needs: [build]
     runs-on: ubuntu-latest
@@ -56,9 +57,9 @@ jobs:
         docker build . -t openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
         docker push openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
 
-  cd to webapp:
+  cd_to_webapp:
     if: github.event_name == 'push'
-    needs: [docker build and push]
+    needs: [docker_build_and_push]
     runs-on: ubuntu-latest
     steps:
     - uses: azure/webapps-deploy@v2
