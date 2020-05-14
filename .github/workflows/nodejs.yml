@@ -51,6 +51,13 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
+    - name: test docker version
+      working-directory: ./apis/userprofile
+      run: |
+        ls -l
+        pwd
+        docker version
+    
     - name: docker build push
       working-directory: ./apis/userprofile
       run: |
