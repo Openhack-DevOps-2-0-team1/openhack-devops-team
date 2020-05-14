@@ -79,6 +79,7 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - uses: azure/webapps-deploy@v2
       with:
-        app-name: 'openhack2b446dk2userprofile/slots/staging'
+        app-name: 'openhack2b446dk2userprofile'
+        slot-name: 'staging'
         images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
     
