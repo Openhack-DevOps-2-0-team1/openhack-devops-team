@@ -5,11 +5,11 @@ name: Node.js CI
 
 on:
   push:
+    branches: [ master ]
     paths: 
       - 'apis/userprofile/**' 
       - '.github/workflows/nodejs.yml'   
   pull_request:
-    branches: [ master ]
     paths: 'apis/userprofile/**'
 
 jobs:
@@ -38,3 +38,32 @@ jobs:
     - name: npm test
       run: npm test
       working-directory: ./apis/userprofile
+
+  docker build and push:
+    if: github.event_name == 'push'
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v1
+      with:
+        login-server: openhack2b446dk2acr.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: docker build push
+      working-directory: ./apis/userprofile
+      run: |
+        docker build . -t openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
+        docker push openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}
+
+  cd to webapp:
+    if: github.event_name == 'push'
+    needs: [docker build and push]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'openhack2b446dk2userprofile-staging'
+        images: 'openhack2b446dk2acr.azurecr.io/devopsoh/api-userprofile:${{ github.sha }}'
+        publish-profile: ${{ secrets.azureWebAppPublishProfile_userprofile_staging }}
+    
